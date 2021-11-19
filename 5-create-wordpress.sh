@@ -1,19 +1,24 @@
-oc delete serviceaccount wordpress-servacc
-oc delete all -l app=wordpress
 
-oc create serviceaccount wordpress-servacc -n wordpress
-oc adm policy add-scc-to-user anyuid -z wordpress-servacc -n wordpress
+echo
+echo "Creating Wordpress instance ..."
+echo
 
-oc new-app --name wordpress --docker-image docker.io/library/wordpress:latest -n wordpress
+oc create serviceaccount wordpress-servacc
+oc adm policy add-scc-to-user anyuid -z wordpress-servacc
 
-oc set serviceaccount deployment wordpress wordpress-servacc -n wordpress
-oc set env deployment/wordpress --from secret/wordpress-secret -n wordpress
-oc set env deployment/wordpress --from configmap/wordpress -n wordpress
+oc new-app --name wordpress --docker-image docker.io/library/wordpress:latest
 
-oc label deployment/wordpress app.kubernetes.io/part-of=WORDPRESS --overwrite -n wordpress
-oc label deployment/wordpress app.openshift.io/runtime=wordpress --overwrite -n wordpress
+oc set serviceaccount deployment wordpress wordpress-servacc
+oc set env deployment/wordpress --from secret/wordpress-secret
+oc set env deployment/wordpress --from configmap/wordpress
 
+oc label deployment/wordpress app.kubernetes.io/part-of=WORDPRESS --overwrite
+oc label deployment/wordpress app.openshift.io/runtime=wordpress --overwrite
 
 oc expose service wordpress
-oc get route 
 
+echo
+echo "Your Wordpress deployment has finished! Please direct your browser here to finish setup:"
+echo
+echo "   https://"`oc get route wordpress -o template --template='{{ .spec.host }}'` 
+echo
