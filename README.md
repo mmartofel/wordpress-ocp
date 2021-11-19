@@ -1,21 +1,23 @@
 # Setup Wordpress with MySQL at Red Hat OpenShift
 
-At this repository I collected scripts that can help you to touch base with Wordpress deployed at Red Hat OpenShift in for the containers.
+At this repository I collected scripts that can help you to touch base with Wordpress deployed at Red Hat OpenShift in form the containers (or really K8S pod's).
 Scripts make use of Red Hat OpenShift command line utility 'oc' to create required pods, deployments, services and routes using publically available container images.
 
-Login to you desired Red Hat OpenShift cluster, for exmple:
+Let's get started.
+
+First, login to you desired Red Hat OpenShift cluster, for exmple:
 
 `` oc login --token=sha256~[YOUR_TOKEN] --server=https://[YOUR_API_ROUTE]:6443 ``
 
-Run script from 1 to 5 accordingly, you should see the output similar to the above:
+Run script from 1-... to 5-... accordingly, you should see the output similar to the above:
 
 ```
-mmartofe@MacBook-Pro wordpress % ./1-create-project.sh mywordpress
+$ ./1-create-project.sh mywordpress
 
 Creating new Red Hat OpenShift project that will host your Wordpress instance.
 
 Creating project mywordpress
-Already on project "mywordpress" on server "https://api.ocp4.cloud.aosgs.xyz:6443".
+Already on project "mywordpress" on server "https://$[YOUR_K8S_CLUSTER_API]:6443".
 
 You can add applications to this project with the 'new-app' command. For example, try:
 
@@ -26,15 +28,15 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
     kubectl create deployment hello-node --image=k8s.gcr.io/serve_hostname
 
 
-Using project "mywordpress" on server "https://api.ocp4.cloud.aosgs.xyz:6443".
+Using project "mywordpress" on server "https://$[YOUR_K8S_CLUSTER_API]:6443".
 
-mmartofe@MacBook-Pro wordpress % ./2-create-mysql-secret.sh
+$ ./2-create-mysql-secret.sh
 
 Creating secret for MySQL database ...
 
 secret/mysql created
 
-mmartofe@MacBook-Pro wordpress % ./3-create-mysql-database.sh
+$ ./3-create-mysql-database.sh
 
 Creating MySQL database for Wordpress ...
 
@@ -54,14 +56,14 @@ deployment.apps/mysql updated
 deployment.apps/mysql labeled
 deployment.apps/mysql labeled
 
-mmartofe@MacBook-Pro wordpress % ./4-create-wordpress-secret.sh
+$ ./4-create-wordpress-secret.sh
 
 Creating ConfigMap and Secret for Wordpress ...
 
 configmap/wordpress created
 secret/wordpress-secret created
 
-mmartofe@MacBook-Pro wordpress % ./5-create-wordpress.sh
+$ ./5-create-wordpress.sh
 
 Creating Wordpress instance ...
 
@@ -88,7 +90,7 @@ route.route.openshift.io/wordpress exposed
 
 Your Wordpress deployment has finished! Please direct your browser here to finish setup:
 
-   https://wordpress-mywordpress.apps.ocp4.cloud.aosgs.xyz
+   https://[YOUT_ROUTE_RETURNED]
 ```
 now head to the link displayed and finish your Wordpress setup.
 To cleanup after your setup attempt simply delete entire namespace you created with script one:
